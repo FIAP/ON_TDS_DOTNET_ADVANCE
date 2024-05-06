@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace Fiap.Web.Alunos.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240504204329_AddClientes")]
-    partial class AddClientes
+    [Migration("20240506005814_AddCliente")]
+    partial class AddCliente
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Fiap.Web.Alunos.Migrations
 {
     /// <inheritdoc />
-    public partial class AddClientes : Migration
+    public partial class AddCliente : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

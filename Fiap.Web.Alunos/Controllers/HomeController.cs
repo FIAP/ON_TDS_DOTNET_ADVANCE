@@ -1,3 +1,4 @@
+using Fiap.Web.Alunos.Logging;
 using Fiap.Web.Alunos.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -6,15 +7,16 @@ namespace Fiap.Web.Alunos.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ICustomLogger _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICustomLogger logger)
         {
             _logger = logger;
         }
 
         public IActionResult Index()
         {
+            _logger.Log("Acessando a página inicial.");
             return View();
         }
 

@@ -1,5 +1,6 @@
 #region IMPORTAÇÃO REFERENTE AO BANCO DE DADOS
 using Fiap.Web.Alunos.Data.Contexts;
+using Fiap.Web.Alunos.Logging;
 using Microsoft.EntityFrameworkCore;
 #endregion
 
@@ -12,6 +13,10 @@ builder.Services.AddDbContext<DatabaseContext>(
 );
 #endregion
 
+
+#region Registro IServiceCollection
+builder.Services.AddSingleton<ICustomLogger, MockLogger>();
+#endregion
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

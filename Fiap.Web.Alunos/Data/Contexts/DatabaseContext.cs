@@ -6,13 +6,13 @@ namespace Fiap.Web.Alunos.Data.Contexts
     public class DatabaseContext : DbContext
     {
 
-        public DbSet<RepresentanteModel> Representantes { get; set; }
-        public DbSet<ClienteModel> Clientes { get; set; }
-        public DbSet<ProdutoModel> Produtos { get; set; }
-        public DbSet<LojaModel> Lojas { get; set; }
-        public DbSet<PedidoModel> Pedidos { get; set; }
-        public DbSet<FornecedorModel> Fornecedores { get; set; }
-        public DbSet<PedidoProdutoModel> PedidoProdutos { get; set; }
+        public virtual DbSet<RepresentanteModel> Representantes { get; set; }
+        public virtual DbSet<ClienteModel> Clientes { get; set; }
+        public virtual DbSet<ProdutoModel> Produtos { get; set; }
+        public virtual DbSet<LojaModel> Lojas { get; set; }
+        public virtual DbSet<PedidoModel> Pedidos { get; set; }
+        public virtual DbSet<FornecedorModel> Fornecedores { get; set; }
+        public virtual DbSet<PedidoProdutoModel> PedidoProdutos { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

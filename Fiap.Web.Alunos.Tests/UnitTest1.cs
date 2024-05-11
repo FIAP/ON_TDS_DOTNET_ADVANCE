@@ -16,7 +16,7 @@ namespace Fiap.Web.Alunos.Tests
             var ehMaiorDeIdade = maioridade >= 18;
 
             // Assert
-            Assert.False(ehMaiorDeIdade);
+            Assert.True(ehMaiorDeIdade);
         }
     }
 }

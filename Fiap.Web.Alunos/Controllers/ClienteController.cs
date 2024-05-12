@@ -1,4 +1,5 @@
-﻿using Fiap.Web.Alunos.Data.Contexts;
+﻿using AutoMapper;
+using Fiap.Web.Alunos.Data.Contexts;
 using Fiap.Web.Alunos.Models;
 using Fiap.Web.Alunos.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Fiap.Web.Alunos.Controllers
     {
 
         private readonly DatabaseContext _context;
+        private readonly IMapper _mapper;
 
-        public ClienteController(DatabaseContext context)
+        public ClienteController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
@@ -43,16 +46,8 @@ namespace Fiap.Web.Alunos.Controllers
             // Verifica se todos os dados enviados estão válidos conforme as regras definidas no ViewModel
             if (ModelState.IsValid)
             {
-                var cliente = new ClienteModel
-                {
-                    ClienteId = viewModel.ClienteId,
-                    Nome = viewModel.Nome,
-                    Sobrenome = viewModel.Sobrenome,
-                    Email = viewModel.Email,
-                    DataNascimento = viewModel.DataNascimento,
-                    Observacao = viewModel.Observacao,
-                    RepresentanteId = viewModel.RepresentanteId
-                };
+                var cliente = _mapper.Map<ClienteModel>(viewModel); 
+
                 _context.Clientes.Add(cliente);
                 _context.SaveChanges();
                 TempData["mensagemSucesso"] = $"O cliente {viewModel.Nome} foi cadastrado com sucesso";

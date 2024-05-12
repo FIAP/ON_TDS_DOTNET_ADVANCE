@@ -1,10 +1,11 @@
 #region IMPORTAÇÃO REFERENTE AO BANCO DE DADOS
 using AutoMapper;
 using Fiap.Web.Alunos.Data.Contexts;
+using Fiap.Web.Alunos.Data.Repository;
 using Fiap.Web.Alunos.Logging;
 using Fiap.Web.Alunos.Models;
+using Fiap.Web.Alunos.Services;
 using Fiap.Web.Alunos.ViewModels;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 #endregion
 
@@ -17,9 +18,13 @@ builder.Services.AddDbContext<DatabaseContext>(
 );
 #endregion
 
-
 #region Registro IServiceCollection
 builder.Services.AddSingleton<ICustomLogger, MockLogger>();
+#endregion
+
+#region Registro de Servicos e Repositorios
+builder.Services.AddScoped<IClienteRepository,ClienteRepository>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
 #endregion
 
 

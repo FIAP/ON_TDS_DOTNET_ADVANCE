@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Fiap.Web.Alunos.Data.Contexts;
 using Fiap.Web.Alunos.Models;
+using Fiap.Web.Alunos.Services;
 using Fiap.Web.Alunos.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,18 +14,19 @@ namespace Fiap.Web.Alunos.Controllers
 
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
+        private readonly IClienteService _clienteService;
 
-        public ClienteController(DatabaseContext context, IMapper mapper)
+        public ClienteController(DatabaseContext context, IMapper mapper, IClienteService clienteService)
         {
             _context = context;
             _mapper = mapper;
+            _clienteService = clienteService;
         }
 
 
         public IActionResult Index()
         {
-            // O método Include será explicado posteriomente
-            var clientes = _context.Clientes.Include(c => c.Representante).ToList();
+            var clientes = _clienteService.ListarClientes();
             return View(clientes);
         }
 
@@ -46,10 +48,8 @@ namespace Fiap.Web.Alunos.Controllers
             // Verifica se todos os dados enviados estão válidos conforme as regras definidas no ViewModel
             if (ModelState.IsValid)
             {
-                var cliente = _mapper.Map<ClienteModel>(viewModel); 
-
-                _context.Clientes.Add(cliente);
-                _context.SaveChanges();
+                var cliente = _mapper.Map<ClienteModel>(viewModel);
+                _clienteService.CriarCliente(cliente);
                 TempData["mensagemSucesso"] = $"O cliente {viewModel.Nome} foi cadastrado com sucesso";
                 return RedirectToAction(nameof(Index));
             }
@@ -68,19 +68,9 @@ namespace Fiap.Web.Alunos.Controllers
         [HttpGet]
         public IActionResult Detail(int id)
         {
-            // Usando o método Include para carregar o representante associado
-            var cliente = _context.Clientes
-                            .Include(c => c.Representante) // Carrega o representante junto com o cliente
-                            .FirstOrDefault(c => c.ClienteId == id); // Encontra o cliente pelo id
-
-            if (cliente == null)
-            {
-                return NotFound(); // Retorna um erro 404 se o cliente não for encontrado
-            }
-            else
-            {
-                return View(cliente); // Retorna a view com os dados do cliente e seu representante
-            }
+            var cliente = _clienteService.ObterClientePorId(id);
+            if (cliente == null) return NotFound();
+            return View(cliente);
         }
 
 
@@ -90,9 +80,8 @@ namespace Fiap.Web.Alunos.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var cliente = _context.Clientes.Find(id);
-            if (cliente == null)
-            {
+            var cliente = _clienteService.ObterClientePorId(id);
+            if (cliente == null) { 
                 return NotFound();
             } else {  
 
@@ -109,8 +98,7 @@ namespace Fiap.Web.Alunos.Controllers
         [HttpPost]
         public IActionResult Edit(ClienteModel clienteModel)
         {
-            _context.Update(clienteModel);
-            _context.SaveChanges();
+            _clienteService.AtualizarCliente(clienteModel);
             TempData["mensagemSucesso"] = $"Os dados do cliente {clienteModel.Nome} foram alterados com sucesso";
             return RedirectToAction(nameof(Index));
         }
@@ -120,17 +108,8 @@ namespace Fiap.Web.Alunos.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var cliente = _context.Clientes.Find(id);
-            if (cliente != null)
-            {
-                _context.Clientes.Remove(cliente);
-                _context.SaveChanges();
-                TempData["mensagemSucesso"] = $"Os dados do cliente {cliente.Nome} foram removidos com sucesso";
-            }
-            else
-            {
-                TempData["mensagemSucesso"] = "OPS !!! Cliente inexistente.";
-            }
+            _clienteService.DeletarCliente(id);
+            TempData["mensagemSucesso"] = $"Os dados do cliente foram removidos com sucesso";
             return RedirectToAction(nameof(Index));
         }
 

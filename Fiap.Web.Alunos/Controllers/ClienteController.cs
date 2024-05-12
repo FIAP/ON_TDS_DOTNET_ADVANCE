@@ -1,5 +1,6 @@
 ﻿using Fiap.Web.Alunos.Data.Contexts;
 using Fiap.Web.Alunos.Models;
+using Fiap.Web.Alunos.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore; 
@@ -28,21 +29,30 @@ namespace Fiap.Web.Alunos.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Representantes = 
-                new SelectList(_context.Representantes.ToList()
-                                , "RepresentanteId"
-                                , "NomeRepresentante");
-            return View();
+            var viewModel = new ClienteCreateViewModel
+            {
+                Representantes = new SelectList(_context.Representantes.ToList(), "RepresentanteId", "NomeRepresentante")
+            };
+            return View(viewModel);
         }
 
 
-
-        // Anotação de uso do Verb HTTP Post
         [HttpPost]
-        public IActionResult Create(ClienteModel clienteModel)
+        public IActionResult Create(ClienteCreateViewModel viewModel)
         {
+            var clienteModel = new ClienteModel
+            {
+                ClienteId = viewModel.ClienteId,
+                Nome = viewModel.Nome,
+                Sobrenome = viewModel.Sobrenome,
+                Email = viewModel.Email,
+                DataNascimento = viewModel.DataNascimento,
+                Observacao = viewModel.Observacao,
+                RepresentanteId = viewModel.RepresentanteId
+            };
             _context.Clientes.Add(clienteModel);
             _context.SaveChanges();
+
             TempData["mensagemSucesso"] = $"O cliente {clienteModel.Nome} foi cadastrado com sucesso";
             return RedirectToAction(nameof(Index));
         }

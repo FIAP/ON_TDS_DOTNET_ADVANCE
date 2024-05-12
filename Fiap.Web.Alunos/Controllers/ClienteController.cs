@@ -40,22 +40,33 @@ namespace Fiap.Web.Alunos.Controllers
         [HttpPost]
         public IActionResult Create(ClienteCreateViewModel viewModel)
         {
-            var clienteModel = new ClienteModel
+            // Verifica se todos os dados enviados estão válidos conforme as regras definidas no ViewModel
+            if (ModelState.IsValid)
             {
-                ClienteId = viewModel.ClienteId,
-                Nome = viewModel.Nome,
-                Sobrenome = viewModel.Sobrenome,
-                Email = viewModel.Email,
-                DataNascimento = viewModel.DataNascimento,
-                Observacao = viewModel.Observacao,
-                RepresentanteId = viewModel.RepresentanteId
-            };
-            _context.Clientes.Add(clienteModel);
-            _context.SaveChanges();
-
-            TempData["mensagemSucesso"] = $"O cliente {clienteModel.Nome} foi cadastrado com sucesso";
-            return RedirectToAction(nameof(Index));
+                var cliente = new ClienteModel
+                {
+                    ClienteId = viewModel.ClienteId,
+                    Nome = viewModel.Nome,
+                    Sobrenome = viewModel.Sobrenome,
+                    Email = viewModel.Email,
+                    DataNascimento = viewModel.DataNascimento,
+                    Observacao = viewModel.Observacao,
+                    RepresentanteId = viewModel.RepresentanteId
+                };
+                _context.Clientes.Add(cliente);
+                _context.SaveChanges();
+                TempData["mensagemSucesso"] = $"O cliente {viewModel.Nome} foi cadastrado com sucesso";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                // Se os dados não estão válidos, recarrega a lista de representantes para a seleção na View
+                viewModel.Representantes = new SelectList(_context.Representantes.ToList(), "RepresentanteId", "NomeRepresentante", viewModel.RepresentanteId);
+                // Retorna a View com o ViewModel contendo os dados submetidos e os erros de validação
+                return View(viewModel);
+            }
         }
+
 
 
         // Anotação de uso do Verb HTTP Get

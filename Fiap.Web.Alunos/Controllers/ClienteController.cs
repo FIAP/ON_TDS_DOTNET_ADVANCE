@@ -12,15 +12,16 @@ namespace Fiap.Web.Alunos.Controllers
     public class ClienteController : Controller
     {
 
-        private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
         private readonly IClienteService _clienteService;
+        private readonly IRepresentanteService _representanteService;
 
-        public ClienteController(DatabaseContext context, IMapper mapper, IClienteService clienteService)
+        public ClienteController(IMapper mapper, IClienteService clienteService, IRepresentanteService representanteService)
         {
-            _context = context;
+
             _mapper = mapper;
             _clienteService = clienteService;
+            _representanteService = representanteService;
         }
 
 
@@ -36,7 +37,8 @@ namespace Fiap.Web.Alunos.Controllers
         {
             var viewModel = new ClienteCreateViewModel
             {
-                Representantes = new SelectList(_context.Representantes.ToList(), "RepresentanteId", "NomeRepresentante")
+                Representantes = new SelectList(
+                    _representanteService.ListarRepresentantes(), "RepresentanteId", "NomeRepresentante")
             };
             return View(viewModel);
         }
@@ -55,9 +57,10 @@ namespace Fiap.Web.Alunos.Controllers
             }
             else
             {
-                // Se os dados não estão válidos, recarrega a lista de representantes para a seleção na View
-                viewModel.Representantes = new SelectList(_context.Representantes.ToList(), "RepresentanteId", "NomeRepresentante", viewModel.RepresentanteId);
-                // Retorna a View com o ViewModel contendo os dados submetidos e os erros de validação
+                viewModel.Representantes = new SelectList(
+                    _representanteService.ListarRepresentantes(), 
+                    "RepresentanteId", "NomeRepresentante", viewModel.RepresentanteId);
+
                 return View(viewModel);
             }
         }
@@ -86,7 +89,7 @@ namespace Fiap.Web.Alunos.Controllers
             } else {  
 
                 ViewBag.Representantes = 
-                    new SelectList(_context.Representantes.ToList(), 
+                    new SelectList(_representanteService.ListarRepresentantes(), 
                                     "RepresentanteId", 
                                     "NomeRepresentante", 
                                     cliente.RepresentanteId);

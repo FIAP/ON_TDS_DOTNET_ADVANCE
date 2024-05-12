@@ -16,7 +16,7 @@ namespace Fiap.Web.Alunos.Services
 
         public ClienteModel ObterClientePorId(int id) => _repository.GetById(id);
 
-        public void CriarCliente(ClienteModel cliente) => _repository.Add(cliente);        {
+        public void CriarCliente(ClienteModel cliente) => _repository.Add(cliente);        
 
         public void AtualizarCliente(ClienteModel cliente) => _repository.Update(cliente);
 

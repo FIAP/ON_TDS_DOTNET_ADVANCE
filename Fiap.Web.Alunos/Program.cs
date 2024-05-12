@@ -25,6 +25,9 @@ builder.Services.AddSingleton<ICustomLogger, MockLogger>();
 #region Registro de Servicos e Repositorios
 builder.Services.AddScoped<IClienteRepository,ClienteRepository>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
+
+builder.Services.AddScoped<IRepresentanteRepository, RepresentanteRepository>();
+builder.Services.AddScoped<IRepresentanteService, RepresentanteService>();
 #endregion
 
 
